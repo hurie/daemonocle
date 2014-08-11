@@ -104,7 +104,10 @@ class Daemon(object):
             return pid
         else:
             # Remove the stale PID file
-            os.remove(self.pidfile)
+            try:
+                os.remove(self.pidfile)
+            except:
+                pass
             return None
 
     def _write_pidfile(self):
@@ -120,9 +123,12 @@ class Daemon(object):
 
     def _close_pidfile(self):
         """Closes and removes the PID file."""
-        if self._pid_fd is not None:
-            os.close(self._pid_fd)
-        os.remove(self.pidfile)
+        try:
+            if self._pid_fd is not None:
+                os.close(self._pid_fd)
+            os.remove(self.pidfile)
+        except:
+            pass
 
     @classmethod
     def _prevent_core_dump(cls):
